@@ -6,7 +6,7 @@ let pin4="abcdef";
 let pin5="12_456";
 let pin6="123 56"
 let pin7=""
-let hasLetters=(value)=>{
+let containsLetters=(value)=>{
 	return /[a-zA-Z]/.test(value)
 }
 
@@ -20,27 +20,35 @@ let containsSymbols=(value)=> {
 let containsSpace=(value)=>{
 	return /[ ]/.test(value);
 }
+let validatePin=(pin)=>{
+	if(!containsLetters(pin) && leng4or6(pin) && !containsSymbols(pin) && !containsSpace(pin)){
+		return true;
+	}
+	else{
+		return false;
+	}
+}	
 test("pin debe tener 4 o 6 digitos",()=>{
-	expect(leng4or6(pin)).toBeTruthy();
-	expect(leng4or6(pin2)).toBeFalsy();
-	expect(leng4or6(pin3)).toBeTruthy();
+	expect(validatePin(pin)).toBeTruthy();
+	expect(validatePin(pin2)).toBeFalsy();
+	expect(validatePin(pin3)).toBeTruthy();
 })
 
 test("no debe contener letras",()=>{
-	expect(hasLetters(pin)).toBeFalsy();
-	expect(hasLetters(pin4)).toBeTruthy();
+	expect(validatePin(pin)).toBeTruthy();
+	expect(validatePin(pin4)).toBeFalsy();
 })
 
 test("el pin no puede contener signos",()=>{
-	expect(containsSymbols(pin)).toBeFalsy();
-	expect(containsSymbols(pin5)).toBeTruthy();
-})
+	expect(validatePin(pin)).toBeTruthy();
+	expect(validatePin(pin5)).toBeFalsy();
+})	
 
 test("el pin no puede tener espacios",()=>{
-	expect(containsSpace(pin)).toBeFalsy();
-	expect(containsSpace(pin6)).toBeTruthy();
+	expect(validatePin(pin)).toBeTruthy();
+	expect(validatePin(pin6)).toBeFalsy();
 })
 test("que el pin no este vacio",()=>{
-	expect(leng4or6(pin7)).toBeFalsy();
+	expect(validatePin(pin7)).toBeFalsy();
 })
 
