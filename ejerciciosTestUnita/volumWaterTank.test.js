@@ -59,7 +59,7 @@ let getNumber=(value)=>{
 	let aux=value.split('');
 	newValue="";
 	aux.forEach(e=>{
-		if(/[^0-9]/.test(e)){
+		if(/[^0-9.]/.test(e)){
 			return 
 		}else{
 			newValue+=e;
@@ -103,10 +103,10 @@ let convertVolume=(diametro,height)=>{
 		if(metricSystemIsCorrect(metricDiametro) && metricSystemIsCorrect(metricHeight)){
 			diametro=getNumber(diametro);
 			height=getNumber(height);
-			if(metricDiametro == "cm"){
-				diametro=diametro/100;
+			if(metricDiametro == 'cm'){
+				diametro=diametro/100;;
 			}
-			if(metricHeight== "cm"){
+			if(metricHeight == "cm"){
 				height=height/100
 			}
 			const radio = diametro / 2;
@@ -126,8 +126,8 @@ test("tiene cm o m al final",()=>{
 })
 test("calcular volumen",()=>{
 
-	expect(convertVolume(diametro1,height1)).toBeCloseTo(5167785.357600264);
-	expect(convertVolume(diametro2,height2)).toBeCloseTo(5167785.357600264);
+	expect(convertVolume(diametro1,height1)).toBeCloseTo(5167785.36 );
+	expect(convertVolume(diametro2,height2)).toBeCloseTo(5167785.36 );
 })
 test("no deben haber letras entre el número",()=>{
 	expect(convertVolume(diametro4,height4)).toBeFalsy();
