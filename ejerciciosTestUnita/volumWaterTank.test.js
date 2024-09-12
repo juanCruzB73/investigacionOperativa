@@ -5,23 +5,38 @@ En una fábrica de tanques de agua en acero y inoxidable necesitan calcular de f
     El resultado debe ser expresado en litros.
     Los datos de entrada pueden ser en cm o en m.*/
 let pi=Math.PI
+
+//correct variables in cm
 let diametro1="1234cm";
 let height1="4321cm"
 
-let diametro2="1.234m";
+//correct variable in m
+let diametro2="12.34m";
 let height2="4321cm";
 
+//incorrect variables no cm or m
 let diametro3="1234";
-let height3="4321"
+let height3="4321";
+/*
+ const volumen_metros_cubicos = pi * Math.pow(radio, 2) * height;
+ const volumen_litros = volumen_metros_cubicos * 1000;
 
+ 
+  */
+
+//incrorect variable letter betwen number
 let diametro4="12bc34";
-let height4="432..1";
+let height4="432cm1";
 
+//incorrect variable with symbols
+let diametro5="123&/.";
+let height5="12)&4";
 
-let volum4;
-let volum5;
+//incorrect variables with spaces
+let diametro6="123 1";
+let height6="321 12";
 
-let containsCmOrM=(volum)=>{
+let getCmOrM=(volum)=>{
 	 let metricSystem='';
 	 if(/[a-zA-Z]/.test(volum[volum.length-1]) && /[a-zA-Z]/.test(volum[volum.length-2])){
 		 metricSystem+=volum[volum.length-2]+volum[volum.length-1];    
@@ -33,13 +48,13 @@ let containsCmOrM=(volum)=>{
 		  return false;			        }
 	}
 let metricSystemIsCorrect=(value)=>{
-	if(value=="CM"||value=="cm"||value=="m"||value=="M"){
+	if(value=="cm"||value=="m"){
 		return true;
 	}else{
 		return false;
 	}
 }
-//funcion para conseguir el numero y hacerlo numero
+
 let getNumber=(value)=>{
 	let aux=value.split('');
 	newValue="";
@@ -52,70 +67,75 @@ let getNumber=(value)=>{
 	})
 	return Number(newValue);
 }
-let convertVolume=(diametro,height,diametroMetric,heightMetric)=>{
-	let radius=diametro/2;
-	return (pi*(radius**2)*height); 
-}
 let hasLetterBtwNumbers=(value)=>{
 	let aux=value.split('');
 	newValue="";
 	let thereIsLetter=false;
 	for(let i=0;i<aux.length-1;i++){
-		if(/[^0-9]/.test(aux[i])){
+		if(/[^0-9.]/.test(aux[i])){
 			if(/[0-9]/.test(aux[i+1])){
 				thereIsLetter=true; 
 			}
-		}//123..4
-		if(/[^0-9.]/.test(aux[i+1])){
+		}//"12..34m"
+		if(/[^0-9]/.test(aux[i+1])){
 			if(/[0-9]/.test(aux[i+2])){
                                 thereIsLetter=true;
 			}
 		}
 		i++;
-
 	}
-
 	return thereIsLetter;
-};	
+};
+let containSymbols=(value)=>{
+	return /[^a-zA-Z0-9.]/.test(value);
+};
+let containSpace=(value)=>{
+        return /[ ]/.test(value);
+}
+
+let convertVolume=(diametro,height)=>{
+	let hasDiameterLetters=hasLetterBtwNumbers(diametro);
+	let hasHeightLetters=hasLetterBtwNumbers(height);
+
+	if(!containSymbols(diametro) && !containSymbols(height) && !containSpace(diametro) && !containSpace(height) && !hasDiameterLetters && !hasHeightLetters){
+		let metricDiametro=getCmOrM(diametro);
+		let metricHeight=getCmOrM(height);
+		if(metricSystemIsCorrect(metricDiametro) && metricSystemIsCorrect(metricHeight)){
+			diametro=getNumber(diametro);
+			height=getNumber(height);
+			if(metricDiametro == "cm"){
+				diametro=diametro/100;
+			}
+			if(metricHeight== "cm"){
+				height=height/100
+			}
+			const radio = diametro / 2;
+   			const volumen_metros_cubicos = pi * Math.pow(radio, 2) * height;
+   			const volumen_litros = volumen_metros_cubicos * 1000;
+   			return volumen_litros;
+
+		}else{
+			return false;
+		}
+	}else{
+		return false;
+	} 
+}
 test("tiene cm o m al final",()=>{
-	let a = containsCmOrM(diametro1);
-	let b = containsCmOrM(diametro2);
-	let c = containsCmOrM(diametro3);
-	expect(metricSystemIsCorrect(a)).toBeTruthy();
-	expect(metricSystemIsCorrect(b)).toBeTruthy();
-	expect(metricSystemIsCorrect(c)).toBeFalsy();
+	expect(convertVolume(diametro3,height3)).toBeFalsy();
 })
 test("calcular volumen",()=>{
-	let diameterM = containsCmOrM(diametro1);
-        let heightM = containsCmOrM(height1);
-	let diameterN = getNumber(diametro1);
-	let heightN = getNumber(height1);
-	
-	let diameterM2 = containsCmOrM(diametro2);
-        let heightM2 = containsCmOrM(height2);
-	let diameterN2 = getNumber(diametro2);
-	let heightN2 = getNumber(height2);
-	
-	expect(convertVolume(diameterN,heightN,diameterM,diameterM)).toBeCloseTo(5167785357.6)
-	expect(convertVolume(diameterN2,heightN2,diameterM2,diameterM2)).toBeCloseTo(5167785357.6)
-		
+
+	expect(convertVolume(diametro1,height1)).toBeCloseTo(5167785.357600264);
+	expect(convertVolume(diametro2,height2)).toBeCloseTo(5167785.357600264);
 })
 test("no deben haber letras entre el número",()=>{
-	let a=hasLetterBtwNumbers(diametro1);
-	let b=hasLetterBtwNumbers(diametro4);
-	let c=hasLetterBtwNumbers(height4);
-	let d=hasLetterBtwNumbers(diametro2)
-	expect(a).toBeFalsy();
-	expect(b).toBeTruthy();
-	expect(c).toBeTruthy();
-	expect(d).toBeFalsy();
+	expect(convertVolume(diametro4,height4)).toBeFalsy();
 })
-/*
--funcion para detectar si es cm, m o incorrecto
--funcion para convertir
--funcion para que no tenga letras en medio de los numeros
--fucion para no ingresar espacios
--funcion para no ingresar simbolos
--fucion para que tenga metros al final
-*/
-
+test("no de debe contener simbolos",()=>{
+	expect(convertVolume(diametro5,height5)).toBeFalsy();
+//	expect(hasLetterBtwNumbers(diametro2)).toBeFalsy();
+});
+test("no debe tener espacios",()=>{
+	expect(convertVolume(diametro6,height6)).toBeFalsy();
+})
