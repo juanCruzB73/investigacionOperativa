@@ -1,23 +1,3 @@
-/*
-Paseo en bicicleta (Entrega en parte 2)
-Franco sabe que es importante mantenerse hidratado, toma 0,5 litros de agua por hora de pedaleo. 
-Dado el timpo Franco está pedaleando, calcular la cantidad de agua, en litros, que Franco va a tomar.
-
-Redondea el valor al número mas bajo.
-Ejemplos:
-Tiempo = 3 --> litros = 1
-Tiempo = 6.7 --> litros = 3
-Tiempo = 11.8 --> litros = 5
-
-tests:
-
-pass a number
-correct results odd numbers
-redondear correctamente hacia abajo
-tiempor igual a 0
-decimales menores a 1
-
-*/
 let mustBenumber=(value)=>{
    return typeof value == "number";
 };
